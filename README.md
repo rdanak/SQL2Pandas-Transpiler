@@ -35,9 +35,15 @@
 |                     | `HAVING`     | Filtr po GROUP BY         | `(?i)HAVING`                                                   |
 |                     | `ASC_DESC`   | Kierunek sortowania       | `(?i)(ASC\|DESC)`                                              |
 |                     | `LIMIT`      | Limit wierszy             | ```(?i)LIMIT```                                                |
+|                     | `DISTINCT`   | Wybór unikalnych wartości | ```(?i)DISTINCT```                                             |
+|                     | `ALL  `      | Wybór wszystkich wartości | ```(?i)ALL```                                                  |
 |                     | `JOIN_OPS`   | Typy join'ów              | ```(?i)(INNER\|LEFT\|RIGHT\|FULL(\s+OUTER)?\|CROSS)?\s*JOIN``` |
 | **Operatory**       | `LOGIC_OP`   | Operatory logiczne        | ```(?i)(AND\|OR\|NOT)```                                       |
-|                     | `AGG_FUNC`   | Funkcje agregujące        | ```(?i)(COUNT\|SUM\|AVG\|MIN\|MAX)```                          |
+|                     | `COUNT`      | Funkcje licząca           | ```(?i)COUNT```                                                |
+|                     | `SUM`        | Funkcje sumująca          | ```(?i)SUM```                                                  |
+|                     | `AVG`        | Funkcje licząca średnią   | ```(?i)AVG```                                                  |
+|                     | `MIN`        | Znalezienie minimum       | ```(?i)MIN```                                                  |
+|                     | `MAX`        | Znalezienie maksimum      | ```(?i)MAX```                                                  |
 |                     | `COMP_OP`    | Operatory porównania      | ```!=\|<>\|>=\|<=\|>\|<\|=```                                  |
 |                     | `STRUCT`     | Symbole strukturalne      | ```,\|\(\|\)```                                                |
 |                     | `ARYT_OP`    | Operatory arytmetyczne    | ```\+\|\-\|\/\|%```                                            |
@@ -46,6 +52,7 @@
 |                     | `NUMBER`     | Liczby (int/float)        | `\d+(\.\d+)?`                                                  |
 |                     | `STRING`     | Teksty                    | `'[^']*'`                                                      |
 | **Techniczne**      | `WS`         | Białe znaki               | `\s+`                                                          |
+|                     | `TERMINATOR` | Znak końca kwerendy       | `;`                                                            |
 
 ### 6. Gramatyka
 
