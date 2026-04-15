@@ -49,7 +49,7 @@
 
 ### 6. Gramatyka
 
-  Została została napisana w notacji generatora parserów ANTLR4.
+  Została napisana w notacji generatora parserów ANTLR4.
 
 ```
 
