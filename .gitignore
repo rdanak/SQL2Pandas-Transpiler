@@ -1,2 +1,5 @@
-.temp/
-*interp
+.temp/ 
+antlr4/
+sql2pandas/generated/*
+pyrightconfig.json
+__pycache__/
