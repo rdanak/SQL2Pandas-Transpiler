@@ -1,6 +1,5 @@
-from generated.GrammarVisitor import GrammarVisitor
-from generated.GrammarParser import GrammarParser
-from antlr4 import TerminalNode
+from sql2pandas.generated.GrammarVisitor import GrammarVisitor
+from sql2pandas.generated.GrammarParser import GrammarParser
 
 class SQLToPandasVisitor(GrammarVisitor):
     def visitQuery(self, ctx):

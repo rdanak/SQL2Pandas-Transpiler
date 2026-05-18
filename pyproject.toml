@@ -13,3 +13,10 @@ dependencies = [
 dev = [
     "pytest>=9.0.3",
 ]
+[project.scripts]
+sql2pandas = "sql2pandas.cli:main"
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+include = ["sql2pandas*"]

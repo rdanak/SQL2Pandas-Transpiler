@@ -1,8 +1,8 @@
 import sys
 import antlr4 as antlr
-from generated.GrammarLexer import GrammarLexer
-from generated.GrammarParser import GrammarParser
-from visitor import SQLToPandasVisitor
+from sql2pandas.generated.GrammarLexer import GrammarLexer
+from sql2pandas.generated.GrammarParser import GrammarParser
+from sql2pandas.visitor import SQLToPandasVisitor
 
 
 def transpile(sql: str) -> str:
