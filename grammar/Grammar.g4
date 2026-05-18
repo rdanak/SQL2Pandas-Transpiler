@@ -202,7 +202,7 @@ AVG      : [aA][vV][gG];
 // operators & punctuation 
 
 COMP_OPERATOR       : '<>' | '!=' | '=' | '<=' | '>=' | '<' | '>';
-ARITHMETIC_OPERATOR : '+' | '-' | '*' | '/' | '%';
+ARITHMETIC_OPERATOR : '+' | '-' | '/' | '%';
 COMMA    : ',';
 DOT      : '.';
 LPAREN   : '(';
