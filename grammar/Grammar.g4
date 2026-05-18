@@ -1,7 +1,12 @@
 grammar Grammar;
 
+// ─────────────────────────────────────────
+//  PARSER RULES
+// ─────────────────────────────────────────
+
 query
-    : SELECT quantifier? select_list FROM table_list
+    : SELECT quantifier? select_list
+      FROM table_list
       where_statement?
       group_by_statement?
       having_statement?
@@ -11,142 +16,217 @@ query
     ;
 
 quantifier
-    : DISTINCT | ALL
+    : DISTINCT
+    | ALL
     ;
+
+// SELECT list
 
 select_list
     : STAR
-    | select_column (',' select_column)*
+    | select_column (COMMA select_column)*
     ;
 
 select_column
-    : variable
-    | aggregate_function '(' quantifier? variable ')' alias?
+    : aggregate_function LPAREN quantifier? (column_reference | STAR) RPAREN alias?
+    | expression alias?
     ;
 
 alias
     : AS variable
+    | variable
     ;
 
+// column / table references
+
+column_reference
+    : variable (DOT variable)?
+    ;
+
+// FROM / JOIN
+
 table_list
-    : table_statement alias? (',' table_statement alias?)*
+    : table_statement (COMMA table_statement)*
     ;
 
 table_statement
-    : variable (join_statement)*
+    : variable alias? join_statement*
     ;
 
 join_statement
-    : join_type variable ON column_reference '=' column_reference
-    ;
-
-column_reference
-    : variable ('.' variable)?
+    : join_type variable alias? ON condition
     ;
 
 join_type
     : INNER? JOIN
-    | LEFT OUTER? JOIN
+    | LEFT  OUTER? JOIN
     | RIGHT OUTER? JOIN
-    | FULL OUTER? JOIN
+    | FULL  OUTER? JOIN
+    | CROSS JOIN
     ;
+
+// WHERE
 
 where_statement
     : WHERE condition
     ;
 
+// conditions / expressions 
+
 condition
-    : expression ((AND | OR) expression)*
+    : NOT condition                                   # notCondition
+    | condition AND condition                         # andCondition
+    | condition OR  condition                         # orCondition
+    | LPAREN condition RPAREN                         # parenCondition
+    | expression                                      # exprCondition
     ;
 
 expression
-    : (variable | any_type) COMP_OPERATOR (variable | any_type)
+    : operand COMP_OPERATOR operand                   # compExpr
+    | operand IS NOT? NULL_                           # nullExpr
+    | operand NOT? BETWEEN operand AND operand        # betweenExpr
+    | operand NOT? LIKE STRING                        # likeExpr
+    | operand NOT? IN LPAREN value_list RPAREN        # inExpr
+    | operand                                         # simpleExpr
     ;
 
-numeric_expression
-    : numeric_type
-    | numeric_expression ARITHMETIC_OPERATOR numeric_type
+operand
+    : operand ARITHMETIC_OPERATOR operand             # arithOperand
+    | LPAREN operand RPAREN                           # parenOperand
+    | aggregate_function LPAREN (column_reference | STAR) RPAREN  # aggOperand
+    | column_reference                                # colOperand
+    | literal                                         # litOperand
     ;
+
+value_list
+    : literal (COMMA literal)*
+    ;
+
+// GROUP BY 
 
 group_by_statement
-    : GROUP_BY variable (',' variable)*
+    : GROUP BY column_reference (COMMA column_reference)*
     ;
 
-order_by_statement
-    : ORDER_BY variable (ASC | DESC)? (',' variable (ASC | DESC)?)*
-    ;
+// HAVING
 
 having_statement
-    : HAVING having_expression ((AND | OR) having_expression)*
+    : HAVING condition
     ;
 
-having_expression
-    : aggregate_function '(' variable ')' COMP_OPERATOR any_type
+// ORDER BY
+
+order_by_statement
+    : ORDER BY order_item (COMMA order_item)*
     ;
+
+order_item
+    : column_reference (ASC | DESC)?
+    ;
+
+// LIMIT / OFFSET
 
 limit_statement
-    : LIMIT INTEGER
+    : LIMIT INTEGER (OFFSET INTEGER)?
     ;
 
-any_type
-    : STRING | INTEGER | FLOAT
+// literals & primitives
+
+literal
+    : STRING
+    | number
+    | TRUE
+    | FALSE
+    | NULL_
     ;
 
-numeric_type
-    : INTEGER | FLOAT
-    ;
-
-variable
-    : ID
+number
+    : MINUS? (INTEGER | FLOAT)
     ;
 
 aggregate_function
     : MIN | MAX | COUNT | SUM | AVG
     ;
 
+variable
+    : ID
+    ;
+
+// ─────────────────────────────────────────
+//  LEXER RULES  
+// ─────────────────────────────────────────
+
+// keywords
+
 SELECT   : [sS][eE][lL][eE][cC][tT];
 FROM     : [fF][rR][oO][mM];
 WHERE    : [wW][hH][eE][rR][eE];
-GROUP_BY : [gG][rR][oO][uU][pP] ' ' [bB][yY];
-ORDER_BY : [oO][rR][dD][eE][rR] ' ' [bB][yY];
+GROUP    : [gG][rR][oO][uU][pP];
+BY       : [bB][yY];
+ORDER    : [oO][rR][dD][eE][rR];
 HAVING   : [hH][aA][vV][iI][nN][gG];
+LIMIT    : [lL][iI][mM][iI][tT];
+OFFSET   : [oO][fF][fF][sS][eE][tT];
 ASC      : [aA][sS][cC];
 DESC     : [dD][eE][sS][cC];
-LIMIT    : [lL][iI][mM][iI][tT];
+AS       : [aA][sS];
+ON       : [oO][nN];
+IN       : [iI][nN];
+IS       : [iI][sS];
+NOT      : [nN][oO][tT];
+AND      : [aA][nN][dD];
+OR       : [oO][rR];
+BETWEEN  : [bB][eE][tT][wW][eE][eE][nN];
+LIKE     : [lL][iI][kK][eE];
+NULL_    : [nN][uU][lL][lL];
+TRUE     : [tT][rR][uU][eE];
+FALSE    : [fF][aA][lL][sS][eE];
+DISTINCT : [dD][iI][sS][tT][iI][nN][cC][tT];
+ALL      : [aA][lL][lL];
 INNER    : [iI][nN][nN][eE][rR];
 OUTER    : [oO][uU][tT][eE][rR];
 LEFT     : [lL][eE][fF][tT];
 RIGHT    : [rR][iI][gG][hH][tT];
 FULL     : [fF][uU][lL][lL];
+CROSS    : [cC][rR][oO][sS][sS];
 JOIN     : [jJ][oO][iI][nN];
-AND      : [aA][nN][dD];
-OR       : [oO][rR];
-NOT      : [nN][oO][tT];
-ON       : [oO][nN];
+
+// aggregate functions
+
 MIN      : [mM][iI][nN];
 MAX      : [mM][aA][xX];
 COUNT    : [cC][oO][uU][nN][tT];
 SUM      : [sS][uU][mM];
 AVG      : [aA][vV][gG];
 
-COMP_OPERATOR       : '<>' | '=' | '<' | '>' | '<=' | '>=';
-ARITHMETIC_OPERATOR : '+' | '-' | '/' | '%';
-AS       : [aA][sS];
-DISTINCT : [dD][iI][sS][tT][iI][nN][cC][tT];
-ALL      : [aA][lL][lL];
+// operators & punctuation 
 
+COMP_OPERATOR       : '<>' | '!=' | '=' | '<=' | '>=' | '<' | '>';
+ARITHMETIC_OPERATOR : '+' | '-' | '*' | '/' | '%';
+COMMA    : ',';
+DOT      : '.';
+LPAREN   : '(';
+RPAREN   : ')';
+MINUS    : '-';
+STAR     : '*';
 TERMINATOR : ';';
 
-STAR : '*';
+// literals
 
-ID : [a-zA-Z] [a-zA-Z0-9_]*;
+ID      : [a-zA-Z_] [a-zA-Z0-9_]*;
 
-INTEGER : '-'? ([0-9] | [1-9] [0-9]*);
-FLOAT : [0-9]+ '.' [0-9]+;
+INTEGER : [0-9]+;
 
-STRING 
-    : '\'' (~['])* '\'' 
-    | '"' (~["])* '"' 
-    ;
+FLOAT   : [0-9]+ '.' [0-9]*
+        | '.' [0-9]+
+        ;
 
-WS : [ \t\r\n]+ -> skip;
+STRING  : '\'' (~['\r\n] | '\'\'')*  '\''
+        | '"'  (~["\r\n] | '""')*    '"'
+        ;
+
+// whitespace & comments
+
+BLOCK_COMMENT : '/*' .*? '*/' -> skip;
+LINE_COMMENT  : '--' ~[\r\n]* -> skip;
+WS            : [ \t\r\n]+   -> skip;
