@@ -64,7 +64,7 @@
 |                            | `COUNT`               | Zliczanie                   | `(?i)COUNT`                              |
 |                            | `SUM`                 | Suma                        | `(?i)SUM`                                |
 |                            | `AVG`                 | Średnia                     | `(?i)AVG`                                |
-| **Operatory i interpunkcja** | `COMP_OPERATOR`     | Operatory porównania        | `<>\|!=\|=\|<\|<=\|>\|>=`               |
+| **Operatory i interpunkcja** | `COMP_OPERATOR`     | Operatory porównania        | `<>\|!=\|>=\|<=\|>\|<\|=`                |
 |                            | `ARITHMETIC_OPERATOR` | Operatory arytmetyczne      | `\+\|-\|\/\|%`                           |
 |                            | `COMMA`               | Przecinek                   | `,`                                      |
 |                            | `DOT`                 | Kropka                      | `\.`                                     |
@@ -73,11 +73,11 @@
 |                            | `MINUS`               | Znak minus (osobny)         | `-`                                      |
 |                            | `STAR`                | Gwiazdka                    | `\*`                                     |
 |                            | `TERMINATOR`          | Koniec zapytania            | `;`                                      |
-| **Dane (Literały)**        | `ID`                  | Nazwy obiektów              | `[a-zA-Z_][a-zA-Z0-9_]*`                |
+| **Dane (Literały)**        | `ID`                  | Nazwy obiektów              | `[a-zA-Z_][a-zA-Z0-9_]*`                 |
 |                            | `INTEGER`             | Liczba całkowita            | `[0-9]+`                                 |
-|                            | `FLOAT`               | Liczba zmiennoprzecinkowa   | `[0-9]+\.[0-9]*\|\.[0-9]+`              |
+|                            | `FLOAT`               | Liczba zmiennoprzecinkowa   | `[0-9]+\.[0-9]*\|\.[0-9]+`               |
 |                            | `STRING`              | Ciąg znaków                 | `'[^']*'\|"[^"]*"`                       |
-| **Techniczne**             | `BLOCK_COMMENT`       | Komentarz blokowy           | `\/\*.*?\*\/`                            |
+| **Techniczne**             | `BLOCK_COMMENT`       | Komentarz blokowy           | `\/\*[\s\S]*?\*\/`                       |
 |                            | `LINE_COMMENT`        | Komentarz liniowy           | `--.*`                                   |
 |                            | `WS`                  | Białe znaki                 | `\s+`                                    |
 
