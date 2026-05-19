@@ -25,34 +25,61 @@
 
 ### 5. Opis tokenów
 
-| **Kategoria**       | **Token ID** | **Opis**                  | **Zoptymalizowane Wyrażenie**                                  |
-| ------------------- | ------------ | ------------------------- | -------------------------------------------------------------- |
-| **Słowa kluczowe**  | `SELECT`     | Start zapytania           | ```(?i)SELECT```                                               |
-|                     | `FROM`       | Źródło danych             | ```(?i)FROM```                                                 |
-|                     | `WHERE`      | Filtrowanie               | ```(?i)WHERE```                                                |
-|                     | `GROUP_BY`   | Grupowanie                | ```(?i)GROUP\s+BY```                                           |
-|                     | `ORDER_BY`   | Sortowanie                | ```(?i)ORDER\s+BY```                                           |
-|                     | `HAVING`     | Filtr po GROUP BY         | `(?i)HAVING`                                                   |
-|                     | `ASC_DESC`   | Kierunek sortowania       | `(?i)(ASC\|DESC)`                                              |
-|                     | `LIMIT`      | Limit wierszy             | ```(?i)LIMIT```                                                |
-|                     | `DISTINCT`   | Wybór unikalnych wartości | ```(?i)DISTINCT```                                             |
-|                     | `ALL  `      | Wybór wszystkich wartości | ```(?i)ALL```                                                  |
-|                     | `JOIN_OPS`   | Typy join'ów              | ```(?i)(INNER\|LEFT\|RIGHT\|FULL(\s+OUTER)?\|CROSS)?\s*JOIN``` |
-| **Operatory**       | `LOGIC_OP`   | Operatory logiczne        | ```(?i)(AND\|OR\|NOT)```                                       |
-|                     | `COUNT`      | Funkcje licząca           | ```(?i)COUNT```                                                |
-|                     | `SUM`        | Funkcje sumująca          | ```(?i)SUM```                                                  |
-|                     | `AVG`        | Funkcje licząca średnią   | ```(?i)AVG```                                                  |
-|                     | `MIN`        | Znalezienie minimum       | ```(?i)MIN```                                                  |
-|                     | `MAX`        | Znalezienie maksimum      | ```(?i)MAX```                                                  |
-|                     | `COMP_OP`    | Operatory porównania      | ```!=\|<>\|>=\|<=\|>\|<\|=```                                  |
-|                     | `STRUCT`     | Symbole strukturalne      | ```,\|\(\|\)```                                                |
-|                     | `ARYT_OP`    | Operatory arytmetyczne    | ```\+\|\-\|\/\|%```                                            |
-|                     | `STAR`       | Uniwersalny znak gwiazdki | `\*`                                                           |
-| **Dane (Literały)** | `ID`         | Nazwy tabel/kolumn        | `(?i)[a-z_]\w*`                                                |
-|                     | `NUMBER`     | Liczby (int/float)        | `\d+(\.\d+)?`                                                  |
-|                     | `STRING`     | Teksty                    | `'[^']*'`                                                      |
-| **Techniczne**      | `WS`         | Białe znaki               | `\s+`                                                          |
-|                     | `TERMINATOR` | Znak końca kwerendy       | `;`                                                            |
+| **Kategoria**              | **Token**             | **Opis**                    | **Wzorzec**                             |
+|----------------------------|-----------------------|-----------------------------|------------------------------------------|
+| **Słowa kluczowe**         | `SELECT`              | Start zapytania             | `(?i)SELECT`                             |
+|                            | `FROM`                | Źródło danych               | `(?i)FROM`                               |
+|                            | `WHERE`               | Filtrowanie                 | `(?i)WHERE`                              |
+|                            | `GROUP`               | Klauzula grupowania         | `(?i)GROUP`                              |
+|                            | `BY`                  | Słowo pomocnicze            | `(?i)BY`                                 |
+|                            | `ORDER`               | Klauzula sortowania         | `(?i)ORDER`                              |
+|                            | `HAVING`              | Filtr po grupowaniu         | `(?i)HAVING`                             |
+|                            | `LIMIT`               | Limit wierszy               | `(?i)LIMIT`                              |
+|                            | `OFFSET`              | Przesunięcie wierszy        | `(?i)OFFSET`                             |
+|                            | `ASC`                 | Sortowanie rosnące          | `(?i)ASC`                                |
+|                            | `DESC`                | Sortowanie malejące         | `(?i)DESC`                               |
+|                            | `AS`                  | Alias                       | `(?i)AS`                                 |
+|                            | `ON`                  | Warunek złączenia           | `(?i)ON`                                 |
+|                            | `IN`                  | Operator zbioru             | `(?i)IN`                                 |
+|                            | `IS`                  | Sprawdzenie typu/wartości   | `(?i)IS`                                 |
+|                            | `NOT`                 | Negacja logiczna            | `(?i)NOT`                                |
+|                            | `AND`                 | Koniunkcja logiczna         | `(?i)AND`                                |
+|                            | `OR`                  | Alternatywa logiczna        | `(?i)OR`                                 |
+|                            | `BETWEEN`             | Zakres wartości             | `(?i)BETWEEN`                            |
+|                            | `LIKE`                | Dopasowanie wzorca          | `(?i)LIKE`                               |
+|                            | `NULL_`               | Wartość pusta               | `(?i)NULL`                               |
+|                            | `TRUE`                | Prawda                      | `(?i)TRUE`                               |
+|                            | `FALSE`               | Fałsz                       | `(?i)FALSE`                              |
+|                            | `DISTINCT`            | Unikalne wartości           | `(?i)DISTINCT`                           |
+|                            | `ALL`                 | Wszystkie wartości          | `(?i)ALL`                                |
+|                            | `INNER`               | Złączenie wewnętrzne        | `(?i)INNER`                              |
+|                            | `OUTER`               | Złączenie zewnętrzne        | `(?i)OUTER`                              |
+|                            | `LEFT`                | Złączenie lewostronne       | `(?i)LEFT`                               |
+|                            | `RIGHT`               | Złączenie prawostronne      | `(?i)RIGHT`                              |
+|                            | `FULL`                | Złączenie pełne             | `(?i)FULL`                               |
+|                            | `CROSS`               | Iloczyn kartezjański        | `(?i)CROSS`                              |
+|                            | `JOIN`                | Złączenie tabel             | `(?i)JOIN`                               |
+| **Funkcje agregujące**     | `MIN`                 | Minimum                     | `(?i)MIN`                                |
+|                            | `MAX`                 | Maksimum                    | `(?i)MAX`                                |
+|                            | `COUNT`               | Zliczanie                   | `(?i)COUNT`                              |
+|                            | `SUM`                 | Suma                        | `(?i)SUM`                                |
+|                            | `AVG`                 | Średnia                     | `(?i)AVG`                                |
+| **Operatory i interpunkcja** | `COMP_OPERATOR`     | Operatory porównania        | `<>\|!=\|=\|<\|<=\|>\|>=`               |
+|                            | `ARITHMETIC_OPERATOR` | Operatory arytmetyczne      | `\+\|-\|\/\|%`                           |
+|                            | `COMMA`               | Przecinek                   | `,`                                      |
+|                            | `DOT`                 | Kropka                      | `\.`                                     |
+|                            | `LPAREN`              | Nawias otwierający          | `\(`                                     |
+|                            | `RPAREN`              | Nawias zamykający           | `\)`                                     |
+|                            | `MINUS`               | Znak minus (osobny)         | `-`                                      |
+|                            | `STAR`                | Gwiazdka                    | `\*`                                     |
+|                            | `TERMINATOR`          | Koniec zapytania            | `;`                                      |
+| **Dane (Literały)**        | `ID`                  | Nazwy obiektów              | `[a-zA-Z_][a-zA-Z0-9_]*`                |
+|                            | `INTEGER`             | Liczba całkowita            | `[0-9]+`                                 |
+|                            | `FLOAT`               | Liczba zmiennoprzecinkowa   | `[0-9]+\.[0-9]*\|\.[0-9]+`              |
+|                            | `STRING`              | Ciąg znaków                 | `'[^']*'\|"[^"]*"`                       |
+| **Techniczne**             | `BLOCK_COMMENT`       | Komentarz blokowy           | `\/\*.*?\*\/`                            |
+|                            | `LINE_COMMENT`        | Komentarz liniowy           | `--.*`                                   |
+|                            | `WS`                  | Białe znaki                 | `\s+`                                    |
 
 ### 6. Gramatyka
 
