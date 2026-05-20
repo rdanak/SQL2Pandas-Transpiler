@@ -357,3 +357,25 @@ Zapis wyniku do pliku:
 ```bash
 uv run sql2pandas plik.sql -o wynik.py
 ```
+
+### Drzewo Projektu
+```
+SQL2Pandas-Transpiler/
+├── .gitignore
+├── .python-version
+├── grammar/
+│   └── Grammar.g4
+├── makefile
+├── pyproject.toml
+├── README.md
+├── sql2pandas/
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── generated/
+│   │   └── .gitkeep
+│   └── visitor.py
+├── test/
+│   └── test_select.py
+└── uv.lock
+```
+
