@@ -4,6 +4,25 @@ grammar Grammar;
 //  PARSER RULES
 // ─────────────────────────────────────────
 
+statement
+    : query
+    | create_table_statement
+    ;
+
+// CREATE TABLE
+
+create_table_statement
+    : CREATE TABLE variable LPAREN column_definition (COMMA column_definition)* RPAREN TERMINATOR?
+    ;
+
+column_definition
+    : variable data_type
+    ;
+
+data_type
+    : INT_TYPE | VARCHAR | FLOAT_TYPE
+    ;
+
 query
     : SELECT quantifier? select_list
       FROM table_list
@@ -190,6 +209,14 @@ RIGHT    : [rR][iI][gG][hH][tT];
 FULL     : [fF][uU][lL][lL];
 CROSS    : [cC][rR][oO][sS][sS];
 JOIN     : [jJ][oO][iI][nN];
+CREATE  : [cC][rR][eE][aA][tT][eE];
+TABLE   : [tT][aA][bB][lL][eE];    
+
+// datatypes
+
+INT_TYPE   : [iI][nN][tT];
+VARCHAR    : [vV][aA][rR][cC][hH][aA][rR];
+FLOAT_TYPE : [fF][lL][oO][aA][tT];
 
 // aggregate functions
 
