@@ -10,7 +10,7 @@ def transpile(sql: str) -> str:
     lexer   = GrammarLexer(stream)
     tokens  = antlr.CommonTokenStream(lexer)
     parser  = GrammarParser(tokens)
-    tree    = parser.query() # This will need to change once the grammar has a new entry point
+    tree    = parser.statement() # This will need to change once the grammar has a new entry point (yeah, it truly did change after all)
 
     visitor = SQLToPandasVisitor()
     return visitor.visit(tree)
