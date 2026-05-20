@@ -243,3 +243,23 @@ class SQLToPandasVisitor(GrammarVisitor):
 
     def visitVariable(self, ctx:GrammarParser.VariableContext):
         return ctx.ID().getText()
+
+    def visitStatement(self, ctx):
+        if ctx.query():
+            return self.visit(ctx.query())
+        elif ctx.create_table_statement():
+            return self.visit(ctx.create_table_statement())
+
+    def visitCreate_table_statement(self, ctx):
+        table_name = self.visit(ctx.variable())
+        columns = []
+        for col_def in ctx.column_definition():
+            col_name = self.visit(col_def.variable())
+            columns.append(f"'{col_name}'")
+        
+        cols_str = ", ".join(columns)
+        return f"{table_name} = pd.DataFrame(columns=[{cols_str}])"
+
+    def visitColumn_definition(self, ctx):
+        return self.visit(ctx.variable())
+    
